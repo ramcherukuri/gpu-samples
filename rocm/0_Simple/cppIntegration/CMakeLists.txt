@@ -9,7 +9,7 @@ if(NOT DEFINED HIP_PATH)
 endif()
 set(CMAKE_MODULE_PATH "${HIP_PATH}/cmake" ${CMAKE_MODULE_PATH})
 
-project(cppIntegration)
+project(asyncAPI)
 
 find_package(HIP QUIET)
 if(HIP_FOUND)
@@ -18,7 +18,7 @@ else()
     message(FATAL_ERROR "Could not find HIP. Ensure that HIP is either installed in /opt/rocm/hip or the variable HIP_PATH is set to point to the right location.")
 endif()
 
-set(TEST_SOURCE_FILES cppIntegration.cpp)
+set(TEST_SOURCE_FILES cppIntegration.cpp cppIntegration_gold.cpp main.cpp )
 
 set(TEST_TARGET_NAME cppIntegration)
 set(CMAKE_INCLUDE_PATH ../../Common/)
