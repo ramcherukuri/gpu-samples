@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+list(APPEND CMAKE_PREFIX_PATH /opt/rocm/hip /opt/rocm/ /opt/rocm/llvm )
+
 if(NOT DEFINED HIP_PATH)
     if(NOT DEFINED ENV{HIP_PATH})
         set(HIP_PATH "/opt/rocm/hip" CACHE PATH "Path to which HIP has been installed")
@@ -11,22 +13,35 @@ set(CMAKE_MODULE_PATH "${HIP_PATH}/cmake" ${CMAKE_MODULE_PATH})
 
 project(bandwidthTest)
 
-find_package(HIP QUIET)
-if(HIP_FOUND)
+find_package(HIP)
+#since we are giving away with hip_add_executable & trying standard way of add_executable, we shall look for normal hip.cofig & hipTraget
+find_package(hip)
+if(hip_FOUND)
     message(STATUS "Found HIP: " ${HIP_VERSION})
 else()
     message(FATAL_ERROR "Could not find HIP. Ensure that HIP is either installed in /opt/rocm/hip or the variable HIP_PATH is set to point to the right location.")
 endif()
 
+
+#Specifying clearly that we should be using hipcc for compilaint & not the /usr/bin/c++
+set(CXX "/opt/rocm/bin/hipcc")
+
 set(TEST_SOURCE_FILES bandwidthTest.cpp)
 
 set(TEST_TARGET_NAME bandwidthTest)
+
 set(CMAKE_INCLUDE_PATH ../../Common/)
 
 set(COMMON_DIRECTORY ../../Common/)
 
-set_source_files_properties(${TEST_SOURCE_FILES} PROPERTIES HIP_SOURCE_PROPERTY_FORMAT 1)
-hip_add_executable(${TEST_TARGET_NAME} ${TEST_SOURCE_FILES})
 
-target_include_directories( ${TEST_TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_DIRECTORY}>)
+set_source_files_properties(${TEST_SOURCE_FILES} PROPERTIES HIP_SOURCE_PROPERTY_FORMAT 1)
+add_executable(${TEST_TARGET_NAME} ${TEST_SOURCE_FILES})
+
+#Telling the compiler that this code has CPP14 directives so use that
+target_compile_options(${TEST_TARGET_NAME} PUBLIC -std=c++14)
+target_include_directories( ${TEST_TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_DIRECTORY}> )
+#Finally just link with hip::device & pull up all the dependecies from hipTargerXXX.cmake
+target_link_libraries(${TEST_TARGET_NAME} hip::device )
+
 
