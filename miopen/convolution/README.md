@@ -4,11 +4,11 @@ Test code uses OpenCV to open and save images.
 
 Install opencv on Ubuntu 18.04 
 
-sudo apt install libopencv-dev 
+* sudo apt install libopencv-dev 
 
 To build and run 
 
-make
-./conv ./mario.png
+* make
+* ./conv ./mario.png
 
 The output image will save as out.png.
