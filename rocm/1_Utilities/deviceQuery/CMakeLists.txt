@@ -19,14 +19,13 @@ else()
 endif()
 
 set(TEST_SOURCE_FILES deviceQuery.cpp)
-
 set(TEST_TARGET_NAME deviceQuery)
 set(CMAKE_INCLUDE_PATH ../../Common/)
 
 set(COMMON_DIRECTORY ../../Common/)
+set(CMAKE_HIP_ARCHITECTURES OFF)
 
 set_source_files_properties(${TEST_SOURCE_FILES} PROPERTIES HIP_SOURCE_PROPERTY_FORMAT 1)
 hip_add_executable(${TEST_TARGET_NAME} ${TEST_SOURCE_FILES})
 
 target_include_directories( ${TEST_TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${COMMON_DIRECTORY}>)
-
