@@ -22,6 +22,7 @@ set(TEST_SOURCE_FILES vectorAdd.cpp)
 
 set(TEST_TARGET_NAME vectorAdd)
 set(CMAKE_INCLUDE_PATH ../../Common/)
+set(CMAKE_HIP_ARCHITECTURES OFF)
 
 set(COMMON_DIRECTORY ../../Common/)
 
